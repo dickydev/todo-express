@@ -4,10 +4,10 @@ import { Todo } from '../models/todoModels';
 
 const sequelize = new Sequelize({
   dialect: 'mysql',
-  host: 'localhost',
-  username: 'root',
-  password: '',
-  database: 'todo_db',
+  host: process.env.DB_HOST,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
   models: [Todo],
   logging: false, // Disable logging if not needed
 });

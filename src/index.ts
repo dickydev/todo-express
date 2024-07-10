@@ -20,20 +20,27 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const corsOptions = {
-  origin: '*', // Adjust this to allow specific domains if needed
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: 'http://localhost:3000', // Update this to the correct frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-app.use('/api', todoRoutes);
+app.use(todoRoutes);
 
 sequelize.sync().then(() => {
   app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
   });
-}).catch(err => console.log('Unable to connect to the database:', err));
+}).catch(err => {
+  console.log('Unable to connect to the database:', err);
+  process.exit(1); // Exit the process with a non-zero status code
+});
 
-export default app;
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
 
